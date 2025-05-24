@@ -94,6 +94,14 @@ nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
+nav ul li a {
+	text-decoration: none;
+	text-transform: none;
+}
+
+a:visited {
+	color: inherit;
+}
 
 li:hover {
 	color: #B1663C;
@@ -148,7 +156,7 @@ li:hover {
 	font-size: 1.2rem;
 }
 
-.filters-containers button:hover {
+.filters-containers button.active {
 	color: white;
 	background-color: #1D6154;
 	transition: 0.6s ease;
