@@ -1,3 +1,6 @@
+console.log("🎉 script.js bien chargé !");
+
+
 // On déclare une variable globale pour stocker tous les projets récupérés depuis l'API
 let allProjects = [];
 let categorie = [];
