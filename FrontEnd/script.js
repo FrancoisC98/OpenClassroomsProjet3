@@ -156,4 +156,25 @@ if(token) {
     window.location.reload();
 
   });
+
+  editMode();
 }
+
+function editMode() {
+const editNav = document.createElement('div');
+
+
+editNav.textContent = '<fa-regular fa-pen-to-square> Mode édition'
+editNav.style.position = 'fixed'
+editNav.style.top = "0";
+editNav.style.left = "0";
+editNav.style.width = "100%";
+editNav.style.height = "40px";
+editNav.style.backgroundColor = "black";
+editNav.style.color = "white";
+editNav.style.display = "flex"
+editNav.style.justifyContent = "center";
+
+document.body.prepend(editNav)
+}
+
