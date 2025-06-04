@@ -101,3 +101,59 @@ function filterProjects(categoryId) {
   });
 }
 
+
+// LOGIN //
+
+const loginForm = document.querySelector("form");
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    const response = await fetch("http://localhost:5678/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Connexion réussie :", data);
+
+      localStorage.setItem("token", data.token);
+
+
+      window.location.href = "index.html"; 
+    } else {
+  
+      const errorData = await response.json();
+      alert("Échec de la connexion : " + errorData.message);
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    alert("Une erreur est survenue. Vérifie que ton backend tourne !");
+  }
+});
+
+
+// LOGOUT //
+
+const loginLink = document.getElementById('login-link');
+const token = localStorage.getItem('token')
+
+if(token) {
+  loginLink.textContent = 'logout';
+  loginLink.href = '#';
+
+  loginLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('token');
+    window.location.reload();
+
+  });
+}
