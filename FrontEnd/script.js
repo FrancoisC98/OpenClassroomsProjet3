@@ -12,8 +12,13 @@ fetch("http://localhost:5678/api/categories")
   .then(data => {
     categories = data;
 
+
     // Générer les boutons filtres
+    const token = localStorage.getItem('token');
+    if (!token) {
     const filtersContainer = document.querySelector(".filters-containers");
+
+    if (filtersContainer) {
     filtersContainer.innerHTML = ""; 
 
     const allBtn = document.createElement("button");
@@ -29,8 +34,9 @@ fetch("http://localhost:5678/api/categories")
       btn.textContent = cat.name;  // récupère le nom de la catégorie depuis l'API
       filtersContainer.appendChild(btn);
     });
-
-  
+  }
+}
+    
     addFilterEvents();
   })
   .catch(error => {
@@ -154,27 +160,75 @@ if(token) {
     e.preventDefault();
     localStorage.removeItem('token');
     window.location.reload();
-
   });
-
-  editMode();
 }
 
-function editMode() {
+
+// EDITION //
+
+if(token) {
 const editNav = document.createElement('div');
+editNav.classList.add('edit-nav');
 
+const editIcon = document.createElement('icon');
+editIcon.classList.add("fa-pen-to-square");
 
-editNav.textContent = '<fa-regular fa-pen-to-square> Mode édition'
-editNav.style.position = 'fixed'
-editNav.style.top = "0";
-editNav.style.left = "0";
-editNav.style.width = "100%";
-editNav.style.height = "40px";
-editNav.style.backgroundColor = "black";
-editNav.style.color = "white";
-editNav.style.display = "flex"
-editNav.style.justifyContent = "center";
+const editText = document.createElement('span');
+editText.textContent = 'Mode édition';
+
+editNav.appendChild(editIcon);
+editNav.appendChild(editText);
 
 document.body.prepend(editNav)
+
 }
+//RETIRER LES FILTRES //
+
+if(token) {
+  const filtersContainer = document.querySelector('.filters-containers')
+  if (filtersContainer) filtersContainer.remove();
+}
+
+
+// AJOUT MODALE //
+
+
+const openBtn = document.getElementById('openModale')
+const modale = document.getElementById('modale')
+const closeBtn = document.getElementById ('closeModale')
+const galleryModale = document.querySelector('.gallery-modale')
+
+if(token){
+   openBtn.style.display ='flex';
+
+openBtn.addEventListener('click', () => {
+  console.log("Bouton cliqué");
+  console.log("allProjects au clic :", allProjects);
+  modale.style.display = 'flex';
+  galleryModale.innerHTML = "";
+
+  allProjects.forEach(project => {
+    const img = document.createElement("img");
+    img.src = project.imageUrl;
+    img.alt = project.title;
+    galleryModale.appendChild(img);
+  });
+});
+
+
+closeBtn.addEventListener('click', () => {
+  modale.style.display = 'none';
+});
+
+
+window.addEventListener('click', (e) => {
+  if (e.target === modale) {
+    modale.style.display = 'none';
+  }
+});
+
+}
+
+
+// DELETE IMG //
 
