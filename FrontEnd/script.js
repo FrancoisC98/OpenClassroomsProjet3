@@ -202,16 +202,27 @@ if(token){
    openBtn.style.display ='flex';
 
 openBtn.addEventListener('click', () => {
-  console.log("Bouton cliqué");
-  console.log("allProjects au clic :", allProjects);
   modale.style.display = 'flex';
   galleryModale.innerHTML = "";
 
   allProjects.forEach(project => {
+
+    const figure = document.createElement("figure");
+    figure.classList.add("modale-figure");   
+
     const img = document.createElement("img");
     img.src = project.imageUrl;
     img.alt = project.title;
-    galleryModale.appendChild(img);
+
+    const trash = document.createElement("i");
+    trash.classList.add("fa-solid", "fa-trash-can", "trash-icon");
+    trash.dataset.id = project.id;
+
+
+    figure.appendChild(img);
+    figure.appendChild(trash);
+    galleryModale.appendChild(figure);
+    
   });
 });
 
