@@ -196,7 +196,7 @@ if(token) {
 // AJOUT MODALE //
 
 
-
+const formAddPhoto = document.getElementById("formAddPhoto");
 const openBtn = document.getElementById('openModale');
 const modale = document.getElementById('modale');
 const closeBtn = document.getElementById('closeModale');
@@ -328,8 +328,6 @@ uploadPhotoBtn.addEventListener("click", () => {
 // AJOUTER PHOTO DANS LA GALERIE //
 
 
-const formAddPhoto = document.getElementById("formAddPhoto");
-
 formAddPhoto.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -357,7 +355,7 @@ formAddPhoto.addEventListener("submit", async (e) => {
   formData.append("category", category);
 
   try {
-    const response = await fetch("http://localhost:5678/api/categories", {
+    const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
