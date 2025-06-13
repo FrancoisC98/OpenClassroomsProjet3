@@ -317,37 +317,58 @@ formAddPhoto.addEventListener('submit', (e) => {
 
 // AJOUTER IMG
 
+
 const uploadPhotoBtn = document.getElementById("uploadPhoto");
 const photoFileInput = document.getElementById("photoFile");
 
 uploadPhotoBtn.addEventListener("click", () => {
+  event.preventDefault();
   photoFileInput.click(); 
 });
 
+const previewContainer = document.getElementById("previewContainer");
+
+photoFileInput.addEventListener("change", () => {
+  const file = photoFileInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewContainer.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.alt = "Aperçu de l’image";
+      img.classList.add("preview-image");
+      previewContainer.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+
 
 // AJOUTER PHOTO DANS LA GALERIE //
-
 
 formAddPhoto.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (!token) {
     alert("Vous devez être connecté pour ajouter une photo.");
-    return;  // stoppe la fonction si pas de token
+    return;  
   }
 
   const fileInput = document.getElementById("photoFile");
   const titleInput = document.getElementById("photoTitle");
   const categoryInput = document.getElementById("photoCategory");
 
+  if (!fileInput || !titleInput || !categoryInput) {
+    alert("Champs manquants dans le DOM.");
+    return;
+  }
+
   const image = fileInput.files[0];
   const title = titleInput.value;
   const category = categoryInput.value;
 
-  if (!image || !title || !category) {
-    alert("Veuillez remplir tous les champs.");
-    return;
-  }
 
   const formData = new FormData();
   formData.append("image", image);
@@ -366,28 +387,25 @@ formAddPhoto.addEventListener("submit", async (e) => {
     if (response.ok) {
       const newProject = await response.json();
 
-      // Ajoute à allProjects localement
       allProjects.push(newProject);
 
-      // Recharge la galerie principale et la modale
       reloadGallery();
       reloadModaleGallery();
 
-      // Réinitialise le formulaire
       formAddPhoto.reset();
 
-      // Optionnel : retour à la première modale
       document.getElementById('modale-add-photo').style.display = 'none';
       document.getElementById('modale').style.display = 'flex';
 
-    } else {
-      alert("Erreur lors de l'ajout de la photo.");
-    }
+      alert("Photo ajoutée avec succès !");
+    } 
+
   } catch (error) {
     console.error("Erreur lors de l'envoi :", error);
     alert("Erreur technique.");
   }
 });
+
 
 // RELOAD MODLAE
 
@@ -407,7 +425,17 @@ function reloadModaleGallery() {
     trash.classList.add("fa-solid", "fa-trash-can", "trash-icon");
     trash.dataset.id = project.id;
 
+    const titleCaption = document.createElement("figcaption");
+    titleCaption.textContent = project.title;
+
+    const categoryCaption = document.createElement("span");
+    const category = categories.find(cat => cat.id === project.categoryId);
+    categoryCaption.textContent = category ? category.name : "Catégorie inconnue";
+    categoryCaption.classList.add("caption-category");
+
     figure.appendChild(img);
+    figure.appendChild(titleCaption);
+    figure.appendChild(categoryCaption);
     figure.appendChild(trash);
     galleryModale.appendChild(figure);
   });
