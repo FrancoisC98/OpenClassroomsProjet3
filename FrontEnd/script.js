@@ -305,10 +305,10 @@ formAddPhoto.addEventListener('submit', (e) => {
   })
   .then(response => response.json())
   .then(newProject => {
-    // Ajoute à allProjects localement
+
     allProjects.push(newProject);
-    reloadGallery(); // Met à jour la galerie
-    formAddPhoto.reset(); // Réinitialise le formulaire
+    reloadGallery(); 
+    formAddPhoto.reset(); 
     alert("Photo ajoutée avec succès !");
   })
   .catch(err => console.error("Erreur lors de l'ajout :", err));
@@ -326,24 +326,59 @@ uploadPhotoBtn.addEventListener("click", () => {
   photoFileInput.click(); 
 });
 
-const previewContainer = document.getElementById("previewContainer");
+const previewImage = document.getElementById("previewImage");
+const photoIcon = document.getElementById("photoIcon");
+const uploadButton = document.getElementById("uploadPhoto");
+const fileInfo = document.querySelector(".file-info");
 
 photoFileInput.addEventListener("change", () => {
   const file = photoFileInput.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
-      previewContainer.innerHTML = "";
-      const img = document.createElement("img");
-      img.src = e.target.result;
-      img.alt = "Aperçu de l’image";
-      img.classList.add("preview-image");
-      previewContainer.appendChild(img);
+      previewImage.src = e.target.result;
+      previewImage.style.display = "block";
+      photoIcon.style.display = "none";
+      uploadButton.style.display = "none";
+      fileInfo.style.display = "none";
     };
     reader.readAsDataURL(file);
+
+    const selectedFileName = file.name.split('.').slice(0, -1).join('.').toLowerCase();
+    const matchingProject = allProjects.find(project => {
+    const projectTitle = project.title.toLowerCase();
+      return projectTitle.includes(selectedFileName);
+    });
+
+    if (matchingProject) {
+      fetchWorkData(matchingProject.id); 
+    }
   }
 });
+  
 
+async function fetchWorkData(workId) {
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${workId}`);
+    const work = await response.json();
+
+    document.getElementById("photoTitle").value = work.title;
+    document.getElementById("photoCategory").value = work.categoryId.toString();
+
+    const previewImage = document.getElementById("previewImage");
+    const photoIcon = document.querySelector(".fa-image");
+    const uploadButton = document.getElementById("uploadPhoto");
+    const fileInfo = document.querySelector(".upload-box p");
+
+    previewImage.src = work.imageUrl;
+    previewImage.style.display = "block";
+    photoIcon.style.display = "none";
+    uploadButton.style.display = "none";
+    fileInfo.style.display = "none";
+  } catch (error) {
+    console.error("Erreur lors du chargement de l'image :", error);
+  }
+}
 
 
 // AJOUTER PHOTO DANS LA GALERIE //

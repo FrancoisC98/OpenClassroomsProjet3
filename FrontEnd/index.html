@@ -53,10 +53,11 @@
 				<h2>Ajout photo</h2>
 				<form id="formAddPhoto">
 					<label for="photoFile" class="upload-box">
-					<i class="fa-regular fa-image"></i>
+					<i class="fa-regular fa-image" id="photoIcon"></i>
 					<input type="file" id="photoFile" name="image" accept="image/*" hidden/>
+					<img id="previewImage" class="preview-image" style="display: none;" />
 					<button id="uploadPhoto" class="btn-add-photo">+ Ajouter photo</button>
-					<p>.jpg .png : 4mo max</p>
+					<p class="file-info">.jpg .png : 4mo max</p>
 					</label>
 				</form>
 				<div id="previewContainer" class="preview-container"></div>
