@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
+
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
@@ -24,6 +25,7 @@
 	</nav>
 </header>
 <main>
+
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
@@ -35,6 +37,7 @@
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
 	</section>
+
 	<section id="portfolio">
 		<div class="titleModif">
 		<h2 class="projets">Mes Projets</h2>
@@ -47,10 +50,14 @@
 					<div class="line"></div>
 					<button class="add-photos">Ajouter une photo</button>
 				</div>
+
 		<div id="modale-add-photo">
 			<div class="modale-add-photo-content">
 				<span id="backToGallery" class="back-arrow" >←</span>
+			    <span id="closeAddPhotoModale" class="close">&times;</span>
+
 				<h2>Ajout photo</h2>
+				
 				<form id="formAddPhoto">
 					<label for="photoFile" class="upload-box">
 					<i class="fa-regular fa-image" id="photoIcon"></i>
@@ -62,25 +69,25 @@
 				</form>
 				<div id="previewContainer" class="preview-container"></div>
 
-			
 		<div class="title-category">
+
 		<label for="photoTitle" class="photo-Title">Titre</label>
-       	 <input type="text" id="photoTitle" required />
+       		<input type="text" id="photoTitle" required />
 
         <label for="photoCategory">Catégorie</label>
-        <select id="photoCategory" required>
-          	<option value=""></option>
-          	<option value="1"></option>
-          	<option value="2"></option>
-          	<option value="3"></option>
-        </select>
-			<div class="line-add"></div>
+        	<select id="photoCategory" required>
+          		<option value="" disabled selected>Choisir une catégorie</option>
+          		<option value="1">Objet</option>
+          		<option value="2">Appartements</option>
+          		<option value="3">Hotel & restaurants</option>
+      		</select>
+		
+		<div class="line-add"></div>
 
-		<button type="submit" class="submit-btn">Valider</button>
-			</div>
+		<button type="button" class="submit-btn">Valider</button>
+		</div>
 			</div>
 		</div>
-		
 		</div>
 		
 
