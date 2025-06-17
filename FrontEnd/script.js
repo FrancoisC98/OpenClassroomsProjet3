@@ -173,8 +173,8 @@ if(token) {
 const editNav = document.createElement('div');
 editNav.classList.add('edit-nav');
 
-const editIcon = document.createElement('icon');
-editIcon.classList.add("fa-pen-to-square");
+const editIcon = document.createElement('i');
+editIcon.classList.add("fa-solid", "fa-pen-to-square");
 
 const editText = document.createElement('span');
 editText.textContent = 'Mode édition';
@@ -400,7 +400,6 @@ function deleteImage(id) {
 
 // CATEGORIE 
 
-// 1. On stocke les catégories quand elles sont chargées
 let loadedCategories = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -421,7 +420,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 2. Quand une image est choisie, on attend que les catégories soient prêtes
 document.getElementById('photoFile').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file || loadedCategories.length === 0) return;
@@ -432,7 +430,7 @@ document.getElementById('photoFile').addEventListener('change', (e) => {
       const match = works.find(work => work.imageUrl.includes(file.name));
       if (match) {
         const select = document.getElementById('photoCategory');
-        select.value = String(match.categoryId); // for safety, cast en string
+        select.value = String(match.categoryId); 
         console.log(`Catégorie auto-sélectionnée : ${match.categoryId}`);
       } else {
         console.log('Aucune correspondance trouvée pour cette image.');
