@@ -87,17 +87,17 @@ function filterProjects(categoryId) {
 
     if (categoryId === 0 || project.categoryId === categoryId) {
 
-      // On crée les éléments HTML pour afficher le projet
+
       const figure = document.createElement("figure");
       const img = document.createElement("img");
       const caption = document.createElement("figcaption");
 
-      // On remplit les éléments avec les infos du projet
+
       img.src = project.imageUrl;
       img.alt = project.title;
       caption.innerText = project.title;
 
-      // On assemble l’image et le titre dans le conteneur "figure"
+
       figure.appendChild(img);
       figure.appendChild(caption);
       gallery.appendChild(figure);
@@ -115,10 +115,10 @@ loginForm.addEventListener("submit", async (e) => {
 
   const email = document.getElementById("email").value;
 
-  let password = ""; // déclaration en dehors du if
+  let password = ""; 
   const passwordInput = document.getElementById("password");
   if (passwordInput) {
-    password = passwordInput.value; // assignation si input existe
+    password = passwordInput.value; 
   }
 
   try {
@@ -185,6 +185,8 @@ editNav.appendChild(editText);
 document.body.prepend(editNav)
 
 }
+
+
 //RETIRER LES FILTRES //
 
 if(token) {
@@ -216,7 +218,10 @@ const fileInfo = document.querySelector(".file-info");
 const inputTitle = document.getElementById("photoTitle");
 const inputCategory = document.getElementById("photoCategory");
 
+
+
 // ⚙️ OUVERTURE & FERMETURE DE LA MODALE
+
 if (token) {
   openBtn.style.display = "flex";
 
@@ -280,7 +285,7 @@ const submitButton = document.querySelector('.submit-btn');
 
 
 submitButton.addEventListener('click', (e) => {
-  e.preventDefault(); // pour éviter un éventuel rechargement si c’est dans un <form>
+  e.preventDefault();
 
   const imageFile = document.getElementById('photoFile').files[0];
   const title = document.getElementById('photoTitle').value;
@@ -317,7 +322,7 @@ submitButton.addEventListener('click', (e) => {
       alert("Photo ajoutée avec succès !");
       document.getElementById('photoFile').value = '';
       document.getElementById('photoTitle').value = '';
-      document.getElementById('photoCategory').value = '';
+      document.getElementById('photoCategory').selectedIndex = 0;
       document.getElementById('previewImage').style.display = 'none';
       document.getElementById('photoIcon').style.display = 'block';
       document.getElementById('uploadPhoto').style.display = 'inline-block';
@@ -331,7 +336,8 @@ submitButton.addEventListener('click', (e) => {
 });
 
 
-// 🧼 RÉINITIALISATION PRÉVIEW
+// RÉINITIALISATION PRÉVIEW
+
 function resetPreview() {
   previewImage.style.display = "none";
   photoIcon.style.display = "block";
@@ -339,7 +345,7 @@ function resetPreview() {
   fileInfo.style.display = "block";
 }
 
-// 🖼️ AFFICHAGE DE LA GALERIE DANS LA MODALE
+// AFFICHAGE DE LA GALERIE DANS LA MODALE
 
 function renderGallery() {
   galleryModale.innerHTML = "";
@@ -381,15 +387,58 @@ function deleteImage(id) {
         throw new Error("Erreur lors de la suppression");
       }
 
-      // On met à jour le tableau JS :
       allProjects = allProjects.filter((proj) => proj.id !== id);
 
-      // On recharge la galerie principale et la modale
       filterProjects(0);
-      renderGallery(); // ← important pour recharger la modale avec les bonnes données
+      renderGallery(); 
     })
     .catch((error) => {
       console.error(error);
       alert("Impossible de supprimer ce projet.");
     });
 }
+
+// CATEGORIE 
+
+// 1. On stocke les catégories quand elles sont chargées
+let loadedCategories = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('http://localhost:5678/api/categories')
+    .then(response => response.json())
+    .then(categories => {
+      loadedCategories = categories;
+
+      const select = document.getElementById('photoCategory');
+      select.innerHTML = '<option value="">Choisir une catégorie</option>';
+
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = cat.name;
+        select.appendChild(option);
+      });
+    });
+});
+
+// 2. Quand une image est choisie, on attend que les catégories soient prêtes
+document.getElementById('photoFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file || loadedCategories.length === 0) return;
+
+  fetch('http://localhost:5678/api/works')
+    .then(res => res.json())
+    .then(works => {
+      const match = works.find(work => work.imageUrl.includes(file.name));
+      if (match) {
+        const select = document.getElementById('photoCategory');
+        select.value = String(match.categoryId); // for safety, cast en string
+        console.log(`Catégorie auto-sélectionnée : ${match.categoryId}`);
+      } else {
+        console.log('Aucune correspondance trouvée pour cette image.');
+      }
+    })
+    .catch(err => {
+      console.error("Erreur lors de la vérification de l'image : ", err);
+    });
+});
