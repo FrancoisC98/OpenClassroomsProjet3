@@ -440,3 +440,32 @@ document.getElementById('photoFile').addEventListener('change', (e) => {
       console.error("Erreur lors de la vérification de l'image : ", err);
     });
 });
+
+// GREEN BTN
+
+const imageInput = document.getElementById('photoFile');
+const titleInput = document.getElementById('photoTitle');
+const categorySelect = document.getElementById('photoCategory');
+
+
+function checkFormValidity() {
+  const imageSelected = imageInput.files.length > 0;
+  const titleFilled = titleInput.value.trim() !== '';
+  const categoryChosen = categorySelect.value !== '';
+
+  if (imageSelected && titleFilled && categoryChosen) {
+    submitButton.disabled = false;
+    submitButton.style.backgroundColor = '#1D6154'; // ✅ bouton vert
+    submitButton.style.cursor = 'pointer';
+  } else {
+    submitButton.disabled = true;
+    submitButton.style.backgroundColor = 'gray'; // 🚫 bouton gris
+    submitButton.style.cursor = 'not-allowed';
+  }
+}
+
+imageInput.addEventListener('change', checkFormValidity);
+titleInput.addEventListener('input', checkFormValidity);
+categorySelect.addEventListener('change', checkFormValidity);
+
+checkFormValidity();
