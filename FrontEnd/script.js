@@ -420,27 +420,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.getElementById('photoFile').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file || loadedCategories.length === 0) return;
-
-  fetch('http://localhost:5678/api/works')
-    .then(res => res.json())
-    .then(works => {
-      const match = works.find(work => work.imageUrl.includes(file.name));
-      if (match) {
-        const select = document.getElementById('photoCategory');
-        select.value = String(match.categoryId); 
-        console.log(`Catégorie auto-sélectionnée : ${match.categoryId}`);
-      } else {
-        console.log('Aucune correspondance trouvée pour cette image.');
-      }
-    })
-    .catch(err => {
-      console.error("Erreur lors de la vérification de l'image : ", err);
-    });
-});
-
 // GREEN BTN
 
 const imageInput = document.getElementById('photoFile');
@@ -469,3 +448,60 @@ titleInput.addEventListener('input', checkFormValidity);
 categorySelect.addEventListener('change', checkFormValidity);
 
 checkFormValidity();
+
+// RESET MODALE
+
+// RESET
+
+function resetModalForm() {
+  const imageInput = document.getElementById('photoFile');
+  const titleInput = document.getElementById('photoTitle');
+  const categorySelect = document.getElementById('photoCategory');
+  const previewImage = document.getElementById('previewImage');
+  const photoIcon = document.getElementById('photoIcon');
+  const uploadPhoto = document.getElementById('uploadPhoto');
+  const fileInfo = document.querySelector('.file-info');
+  const submitButton = document.querySelector('.submit-btn');
+
+  if (imageInput) imageInput.value = '';
+  if (titleInput) titleInput.value = '';
+  if (categorySelect) categorySelect.value = '';
+
+  if (previewImage) previewImage.style.display = 'none';
+  if (photoIcon) photoIcon.style.display = 'block';
+  if (uploadPhoto) uploadPhoto.style.display = 'inline-block';
+  if (fileInfo) fileInfo.style.display = 'block';
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.style.backgroundColor = 'gray';
+    submitButton.style.cursor = 'not-allowed';
+  }
+}
+
+const addPhotoModal = document.getElementById('modale-add-photo');
+const openAddModalBtn = document.querySelector('.add-photos');
+const closeAddPhotoBtn = document.getElementById('closeAddPhotoModale');
+
+function openAddPhotoModal() {
+  resetModalForm();
+  addPhotoModal.style.display = 'flex';
+}
+
+function closeAddPhotoModal() {
+  addPhotoModal.style.display = 'none';
+  resetModalForm();
+}
+
+if (openAddModalBtn) openAddModalBtn.addEventListener('click', openAddPhotoModal);
+if (closeAddPhotoBtn) closeAddPhotoBtn.addEventListener('click', closeAddPhotoModal);
+if (backToGalleryBtn) backToGalleryBtn.addEventListener('click', closeAddPhotoModal);
+
+if (addPhotoModal) {
+  addPhotoModal.addEventListener('click', (e) => {
+    if (e.target === addPhotoModal) {
+      closeAddPhotoModal();
+    }
+  });
+}
+
