@@ -1,17 +1,14 @@
-// On déclare une variable globale pour stocker tous les projets récupérés depuis l'APIMore actions
+
 let allProjects = [];
 let categorie = [];
 
 // FILTRES //
 
-// Récupérer les catégories depuis l'API
 fetch("http://localhost:5678/api/categories")
   .then(response => response.json())
   .then(data => {
     categories = data;
 
-
-    // Générer les boutons filtres
     const token = localStorage.getItem('token');
     if (!token) {
     const filtersContainer = document.querySelector(".filters-containers");
@@ -28,8 +25,8 @@ fetch("http://localhost:5678/api/categories")
     categories.forEach(cat => {
       const btn = document.createElement("button");
       btn.classList.add("filters");
-      btn.dataset.id = cat.id;  // récupère l'id de la catégorie depuis l'API
-      btn.textContent = cat.name;  // récupère le nom de la catégorie depuis l'API
+      btn.dataset.id = cat.id;  
+      btn.textContent = cat.name;  
       filtersContainer.appendChild(btn);
     });
   }
@@ -44,7 +41,6 @@ fetch("http://localhost:5678/api/categories")
 
   // BOUTONS //
 
-// On effectue une requête pour récupérer les projets depuis le back-end
 fetch("http://localhost:5678/api/works")
   .then(response => response.json())  
   .then(data => {
@@ -53,7 +49,6 @@ fetch("http://localhost:5678/api/works")
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
 
-// On affiche tous les projets au chargement de la page (filtre "Tous")
     filterProjects(0);
   })
   .catch(error => {
@@ -74,7 +69,6 @@ function addFilterEvents() {
     });
   });
 }
-
 
 // IMAGES // FILTRES 
 
@@ -104,7 +98,6 @@ function filterProjects(categoryId) {
     }
   });
 }
-
 
 // LOGIN //
 
@@ -434,11 +427,11 @@ function checkFormValidity() {
 
   if (imageSelected && titleFilled && categoryChosen) {
     submitButton.disabled = false;
-    submitButton.style.backgroundColor = '#1D6154'; // ✅ bouton vert
+    submitButton.style.backgroundColor = '#1D6154'; 
     submitButton.style.cursor = 'pointer';
   } else {
     submitButton.disabled = true;
-    submitButton.style.backgroundColor = 'gray'; // 🚫 bouton gris
+    submitButton.style.backgroundColor = 'gray'; 
     submitButton.style.cursor = 'not-allowed';
   }
 }
@@ -505,3 +498,37 @@ if (addPhotoModal) {
   });
 }
 
+
+  // On attend que tout le DOM soit prêt
+  window.addEventListener("DOMContentLoaded", () => {
+    // Vérifie s'il y a un hash dans l'URL (comme #contact)
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1); // enleve le #
+      const target = document.getElementById(id);
+      if (target) {
+        // On attend un tout petit délai pour être sûr que tout est prêt
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  });
+
+
+  // CONTACT & PROJET 
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    const hash = window.location.hash;
+
+    if (hash) {
+      const tryScrollToHash = () => {
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        } else {
+          setTimeout(tryScrollToHash, 100);
+        }
+      };
+      setTimeout(tryScrollToHash, 300);
+    }
+  });
