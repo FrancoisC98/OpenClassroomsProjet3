@@ -116,3 +116,9 @@ input[type="submit"]:hover {
     cursor: pointer;
 }
 
+footer nav ul {
+	display: flex;
+	justify-content: flex-end;
+	margin: 2em;
+    margin-top: 15em;
+}
